@@ -1,0 +1,96 @@
+package com.example.myapplication
+
+import android.content.ContentValues
+import android.content.Context
+import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteOpenHelper
+import android.view.View
+import android.widget.Toast
+import java.lang.Exception
+
+class MyDataBase(context: Context) : SQLiteOpenHelper(
+
+    context, MyDataBase.DATABASE_NAME,
+    null, MyDataBase.DATABASE_VERSION
+) {
+    val contexts=context
+    override fun onCreate(p0: SQLiteDatabase?) {
+
+        p0!!.execSQL(DATABASE_CREATE)
+    }
+
+    override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
+
+        p0!!.execSQL("DROP TABLE IF EXISTS $DATABASE_TABLE_NAME")
+        onCreate(p0)
+    }
+
+    companion object {
+        private val DATABASE_NAME = "contact.db"
+        private val DATABASE_VERSION = 1 // مفيد في عمليات تحديث قاعدة البيانات للمطور
+        val DATABASE_TABLE_NAME = "Contacts"
+        val ID = "ID"
+        val CONTACT_NAME = "Name"
+        val CONTACT_PHONE_NUMBER = "Phone_Number"
+
+        private val DATABASE_CREATE = "CREATE TABLE IF NOT EXISTS " +
+                "$DATABASE_TABLE_NAME($ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                " $CONTACT_NAME TEXT ,$CONTACT_PHONE_NUMBER TEXT); "
+
+
+
+    }
+
+fun addContact(values:ContentValues):Long{
+    var id:Long =0
+    val db:SQLiteDatabase=this.writableDatabase
+    id=db.insert(DATABASE_TABLE_NAME,null,values)
+    //db.update(DATABASE_TABLE_NAME,values,"$ID=?",arrayOf(ID.toString()))
+    db.close()
+
+return id
+}
+    fun getContacts(context:Context):ArrayList<Contacts>{
+
+        val query="select * from $DATABASE_TABLE_NAME where 1"
+        val db:SQLiteDatabase=this.readableDatabase
+        var contactList=ArrayList<Contacts>()
+        var cursor=db.rawQuery(query,null)
+        if(cursor.count!=0){
+            cursor.moveToFirst()
+            while(cursor.moveToNext()){
+              //  val contact=Contacts(1,"","")
+                val id=cursor.getInt(cursor.getColumnIndex(ID))
+                val name=cursor.getString(cursor.getColumnIndex(CONTACT_NAME))
+                val phone_number=cursor.getString(cursor.getColumnIndex(CONTACT_PHONE_NUMBER))
+                contactList.add(Contacts(id,name,phone_number))
+            }
+
+        }
+        cursor.close()
+        db.close()
+
+        return contactList
+    }
+
+    fun deleteContact(context:Context,contactID: Int) {
+        val sql="delete from $DATABASE_TABLE_NAME where $contactID=$ID ;"
+        val db=writableDatabase
+
+        try {
+            db.execSQL(sql)
+        }catch (e:Exception){
+            Toast.makeText(contexts,e.message,Toast.LENGTH_LONG).show()
+
+        }
+        db.close()
+    }
+
+    fun updateContact(value: ContentValues) {
+    val db=writableDatabase
+      // val sql="update $DATABASE_TABLE_NAME ($CONTACT_NAME,$CONTACT_PHONE_NUMBER) values(${value.getAsString("Name")})"
+       db.update(DATABASE_TABLE_NAME,value,"$ID=?",arrayOf(value.getAsString(ID)))
+    db.close( )
+    }
+
+}
