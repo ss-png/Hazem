@@ -1,0 +1,53 @@
+package com.example.myapplication
+
+import android.content.ContentValues
+import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.widget.Toast
+import kotlinx.android.synthetic.main.activity_main.*
+
+class MainActivity : AppCompatActivity() {
+
+    var db = MyDataBase(this)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        button.setOnClickListener {
+            var name = edit_name.text.toString()
+            var number = edit_number.text.toString()
+
+
+            var value = ContentValues()
+            value.put("Name", name)
+            value.put("Phone_Number", number)
+
+            var id = db.addContact(value)
+
+            if (id > 0) {
+                Toast.makeText(this, "Contact Added Successfully", Toast.LENGTH_LONG).show()
+                edit_name.text = null
+                edit_number.text = null
+            } else {
+                Toast.makeText(this, "Contact Added Failed", Toast.LENGTH_LONG).show()
+            }
+            viewList()
+        }
+
+        viewList()
+
+    }
+
+
+
+
+
+    fun viewList() {
+
+        var myAdapter = CustomAdapter(this, db.getContacts(this))
+        myList.adapter = myAdapter
+    }
+
+}
