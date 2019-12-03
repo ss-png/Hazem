@@ -1,0 +1,99 @@
+package com.example.myapplication
+
+import android.app.AlertDialog
+import android.content.ContentValues
+import android.content.Context
+import android.content.DialogInterface
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import kotlinx.android.synthetic.main.item.view.*
+import kotlinx.android.synthetic.main.update_layout.view.*
+
+class CustomAdapter(context: Context, contactList: ArrayList<Contacts>):ArrayAdapter<Contacts>(context,0,contactList){
+
+    val db=MyDataBase(context)
+
+    var contacts=contactList
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+
+        //////////////////////////////////////////////////////////// للعرض
+
+        val l=LayoutInflater.from(context)
+        val customView=l.inflate(R.layout.item,parent,false)
+
+        val contact=getItem(position)
+        customView.name_txt.text=contact!!.name
+        customView.phone_txt.text=contact!!.phone_number
+
+
+        //////////////////////////////////////////////////// delete
+        customView.delete_btn.setOnClickListener{
+            val contactID=contact!!.id
+            var dialog=AlertDialog.Builder(context)
+            .setTitle("انتبه")
+            .setMessage(" هل تريد حذف ${contact!!.name}")
+           .setNegativeButton("لا"){ _: DialogInterface?, _: Int -> }
+
+                .setPositiveButton("نعم"){  _: DialogInterface?, _: Int ->
+
+                    db.deleteContact(context,contactID)
+                    contacts.removeAt(position)
+                    notifyDataSetChanged()
+
+                }
+            .create()
+            .show()
+        }
+
+        //////////////////////////////////////////////////////     update
+
+
+        customView.update_btn.setOnClickListener{
+        val contactId=contact!!.id
+            val l=LayoutInflater.from(context)
+            val view=l.inflate(R.layout.update_layout,parent,false)
+
+            view.update_name_txt.setText(contact!!.name)
+            view.update_phone_txt.setText(contact!!.phone_number)
+
+            var dialog=AlertDialog.Builder(context)
+                .setView(view)
+                .setTitle("تحديث بيانات الحساب")
+                .setPositiveButton("تحديث"){_: DialogInterface?, _: Int ->
+
+                     val name=view.update_name_txt.text.toString()
+                    val phone=view.update_phone_txt.text.toString()
+                    var value=ContentValues()
+
+                    value.put("ID",contactId)
+                    value.put("Name",name)
+                    value.put("Phone_Number",phone)
+
+
+                       db.updateContact(value)
+
+
+
+                }
+                .setNegativeButton("الغاء"){_: DialogInterface?, _: Int ->
+
+                }
+                .create()
+                .show()
+            customView.name_txt.text=view.update_name_txt.text
+            customView.phone_txt.text=view.update_phone_txt.text
+            notifyDataSetChanged()
+
+        }
+
+
+        return customView
+    }
+
+
+}
+
+
