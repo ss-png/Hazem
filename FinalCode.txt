@@ -1,0 +1,522 @@
+﻿
+
+//simple Adapter********************************************************************************************************************************
+var data= arrayOf("ali","omar","khaled")
+listView.adapter=ArrayAdapter<String>(this,android.R.layout.simple_expandable_list_item_1,data)
+
+//التعامل مع عنصر من القائمة البسيطة
+listView.setOnItemClickListener { parent, view, position, id ->
+             parent.getItemAtPositon(position).toString()
+            Toast.makeText(this, "${data[position]}", Toast.LENGTH_LONG).show()
+           
+}
+
+//customAdapter*********************************************************************************************************************************
+class CustomAdapter(var activity: Activity, var data:ArrayList<Product>) : BaseAdapter(){
+
+
+    override fun getView(postion: Int, convertView: View?, parent: ViewGroup?): View {
+
+        var root= LayoutInflater.from(activity).inflate(R.layout.item,parent,false)
+
+        root.textView.text=data[postion].name
+        root.textView2.text=data[postion].price.toString()
+
+        return root
+    }
+
+    override fun getItem(postion: Int): Any {
+        return data[postion]
+    }
+
+    override fun getItemId(postion: Int): Long {
+        return postion.toLong()
+    }
+
+    override fun getCount(): Int {
+        return data.size
+    }
+
+
+}
+
+//تشغيل فيديو من خلال رابط على شبكة الانترنت باستخدام العنصر فيديو فيو***************************************************************************************************
+رابط الانترنت
+<uses-permission android:name="android.permission.INTERNET"/>
+var videoView = VideoView(this)
+videoView.setVideoURI(Uri.parse("https://www.demonuts.com/Demonuts/smallvideo.mp4"))
+val mediaController=MediaController(this)
+videoView.setMediaController(mediaController)
+videoView.start()
+
+1. تحديد رابط الفيديو المراد تشغيله في العنصر فيديو فيو
+2.انشاء وابجكت من الكلاس ميديا كونترولر
+3. ربط الفيديو بادوات التحكم 
+4. تشغيل الفيديو
+
+//تشغيل فيديو من داخل تطبيق الاندرويد*************************************************************************************************************************
+videoView.setVideoURI(Uri.parse("android.resource://"+packageName+"/"+R.raw.smallvideo))
+val mediaController=MediaController(this)
+videoView.setMediaController(mediaController)
+videoView.start()
+
+//التعامل مع الصوت*************************************************************************************************************************************
+val mediaPlayer=MediaPlayer()
+mediaPlayer.reset()
+mediaPlayer.setDataSource("https://download.tvquran.com/download/selections/188/592903523d68d.mp3")
+mediaPlayer.prepare()
+mediaPlayer.start()
+mediaPlayer.pause()
+mediaPlayer.stop()
+
+1. انشاء كائن من الكلاس ميديا بلير
+2. تهيئة الكائن المنشاء مسبقا لاعدداته الافتراضية
+3. تحديد مسار الصوت المراد تشغيله
+4. تجهيز الكائن وتهيئته للتشغيل
+5. تشغيل الصوت 
+6. ايقاف مؤقت للصوت
+7. ايقاف الصوت بشكل كامل
+
+//تشغيل صوت من التطبيق*********************************************************************************************************************************
+var mediaPlayer=MediaPlayer()
+mediaPlayer.reset()
+mediaPlayer=MediaPlayer.create(this,R.raw.quran)
+mediaPlayer.start()
+mediaPlayer.pause()
+mediaPlayer.stop()
+
+sample dialog**************************************************************************************************************************************
+val builder=AlertDialog.Builder(this)
+            builder.setTitle("تنبيه")
+            builder.setMessage("سيتم حذف العنصر")
+            builder.setIcon(R.drawable.ic_alert)
+builder.setPositiveButton("موافق"){_:DialogInterface,_:Int->      }
+builder.setNegativeButton("الغاء"){_:DialogInterface,_Int->    }
+val dialog=builder.create()
+dialog.show()
+
+1. انشاء كائن من الكلاس اليرت ديلوق لتتمكن من انشاء مربع الحوار
+2.منح مربع الحوار عنوان
+3. منح مربع الحوار رسالة  جسم مربع الحوار
+4. منح مربع الحوار ايقونة
+5.  انشاء زر ايجابي لتنفيد مهمة  بعنوان موافق
+6.انشاء زر سلبي لتنفيذ مهمة ما بنص الغاء
+7. انشاء مربع الحوار بالاعدادات السابقة
+8. اظهار مربع الحوار السابق
+مربع حوار مخصص **************************************************************************************************************************************
+val inflater=LayoutInflater.from(this).inflate(R.layout.dialog,null)
+val builder=AlertDialog.Builder(this)
+builder.setView(inflater)
+val dialog=builder.create()
+dialog.show()
+inflater.button1.setOnClickListener {
+
+ }
+ inflater.button2.setOnClickListener {
+
+ }
+//fragment****************************************************************************************************************************************
+supportFragmentManager.beginTransaction().replace(R.id.layout,FirstFragment()).commit()
+1. قم بتصميم الواجهة الرئيسية مع مراعاة اعطاء الكونتينر ايدي
+2. قم بادراج الفراقمنت 
+3.عند استدعاء الفراقمنت من الاكتفتي نقوم بلصق الكود السابق مع مراعاة تغيير اسم الفراقمنت و الكونتينر المراد ادراج الفراقمنت به
+//notification below v8****************************************************************************************************************************************
+val notification=Notification.Builder(this)
+            .setSmallIcon(R.drawable.ic_launcher_background)
+            .setContentTitle("تنبيه")
+            .setContentText("جسم الرسالة")
+            .build()
+
+val mNotificationManger=getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+mNotificationManger.notify(10,notification)
+
+val intent=Intent(this,MainActivity::class.java)
+val pendingIntent=PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
+notification.contentIntent=pendingIntent
+//الاشعار مع الفراجمنت****************************************************************************************************************************************
+ val notification= Notification.Builder(context)
+            .setSmallIcon(R.drawable.ic_launcher_background)
+            .setContentTitle("تنبيه")
+            .setContentText("جسم الرسالة")
+            .build()
+
+        val mNotificationManger=activity!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        mNotificationManger.notify(10,notification)
+
+val intent=Intent(this,MainActivity::class.java)
+val pendingIntent=PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
+notification.contentIntent=pendingIntent
+
+
+//notification up v8****************************************************************************************************************************************
+val CHANEL_ID="CHANEL_01"
+    val Id=123456
+
+
+val importance=NotificationManager.IMPORTANCE_HIGH
+        val mChanel=NotificationChannel(CHANEL_ID,"dd",importance)
+        val notification=Notification.Builder(this,CHANEL_ID)
+            .setSmallIcon(R.drawable.ic_launcher_background)
+            .setContentTitle("تنبيه")
+            .setContentText("جسم الرسالة")
+            .build()
+
+        val mNotificationManger=getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        mNotificationManger.createNotificationChannel(mChanel)
+        mNotificationManger.notify(1,notification)
+
+        val intent=Intent(this,MainActivity::class.java)
+        val pendingIntent=PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
+        notification.contentIntent=pendingIntent
+
+
+//WebView ************************************************************************************
+
+
+        my_Web.settings.javaScriptEnabled
+        var Url = ""
+        my_Web.webViewClient = object :WebViewClient(){
+            fun shouldOverridUrlLoadaing (view: WebView? , resourceRequest : WebResourceRequest?):Boolean{
+            Url = resourceRequest.toString()
+            return false
+            }
+        }
+
+        my_Web.loadUrl("https://ahsensaeed.com/best-android-kotlin-libraries-for-2019/")
+    }      // end MaiActivity
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        return  if (keyCode == KeyEvent.KEYCODE_BACK && my_Web.canGoBack()){
+            my_Web.goBack()
+            true
+        }else{
+            super.onKeyDown(keyCode, event)
+
+        }
+
+    }
+
+//DatabaseHelper*******************************************************************************************************************************************
+class DatabaseHelper (context: Context):
+    SQLiteOpenHelper(context,DATABASE_NAME,null, DATABASE_VERSION){
+    private var db: SQLiteDatabase =this.writableDatabase
+    override fun onCreate(db: SQLiteDatabase?) {
+        db?.execSQL("CREATE TABLE $DATABASE_TABLE ($COL_ID INTEGER PRIMARY KEY AUTOINCREMENT,$COL_NAME TEXT,$COL_ADDRESS TEXT,$COL_JOB TEXT , $COL_CHILDREN_NO INTEGER);")
+    }
+    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
+        db?.execSQL("DROP TABLE IF EXISTS $DATABASE_TABLE")
+    }
+    fun insertData(name:String, address:String, job:String, childrenNo:Int):Boolean
+    {
+        var contentValues= ContentValues()
+        contentValues.put(COL_NAME,name)
+        contentValues.put(COL_ADDRESS,address)
+        contentValues.put(COL_JOB,job)
+        contentValues.put(COL_CHILDREN_NO,childrenNo)
+        return db.insert(DATABASE_TABLE,null,contentValues)>0
+    }
+
+    fun getAllData() : ArrayList<EmployeeModel>
+    {
+        val data = ArrayList<EmployeeModel>()
+        val cursor = db.rawQuery("select * from $DATABASE_TABLE  order by $COL_ID desc", null)
+        cursor.moveToFirst()
+        while (!cursor.isAfterLast) {
+            data.add(EmployeeModel(cursor.getInt(0), cursor.getString(1),
+                cursor.getString(2),cursor.getString(3),cursor.getInt(4)))
+            cursor.moveToNext()
+        }
+        cursor.close()
+        return data
+    }
+    fun deleteData(id:Int):Boolean{
+        return  db.delete(DATABASE_TABLE,"$COL_ID=?", arrayOf(id.toString()))>0
+
+    }
+    fun searchForData(keyword:String) : ArrayList<EmployeeModel>
+    {
+        val data = ArrayList<EmployeeModel>()
+        val cursor = db.rawQuery("select * from $DATABASE_TABLE where $COL_NAME like \"%$keyword%\" order by $COL_ID desc", null)
+        cursor.moveToFirst()
+        while (!cursor.isAfterLast) {
+            data.add(EmployeeModel(cursor.getInt(0), cursor.getString(1),
+                cursor.getString(2),cursor.getString(3),cursor.getInt(4)))
+            cursor.moveToNext()
+        }
+        cursor.close()
+        return data
+    }
+    companion object{
+        const val DATABASE_NAME="database1.db"
+        const val DATABASE_TABLE="school"
+        const val DATABASE_VERSION=1
+        const val COL_ID="id"
+        const val COL_NAME="name"
+        const val COL_ADDRESS="address"
+        const val COL_JOB="JOB"
+        const val COL_CHILDREN_NO="children_no"
+    }
+
+}
+//data Model*******************************************************************************************************************************
+data class EmployeeModel(var id:Int, var name:String, var address:String, var job:String, var childrenNo:Int)
+//Adapter with Database*********************************************************************************************************************
+class EmployeeAdapter(var activity: Activity, var data:ArrayList<EmployeeModel>) : BaseAdapter(){
+
+
+    override fun getView(postion: Int, convertView: View?, parent: ViewGroup?): View {
+
+        var root= LayoutInflater.from(activity).inflate(R.layout.custom_view,parent,false)
+        root.textViewNameOfEmployee.text=data[postion].name
+        root.imageButtonDelete.setOnClickListener {
+            val database=DatabaseHelper(activity)
+            if(database.deleteData(data[postion].id)){
+                Toast.makeText(activity, "تم حذف البيانات بنجاح", Toast.LENGTH_LONG).show()
+                data.removeAt(postion)
+                this.notifyDataSetChanged()
+            }
+        }
+
+        root.imageButtonInfo.setOnClickListener {
+            val intent= Intent(activity,DetailsActivity::class.java)
+            intent.putExtra("putId",data[postion].id)
+            intent.putExtra("putName",data[postion].name)
+            intent.putExtra("putAddress",data[postion].address)
+            intent.putExtra("putJob",data[postion].job)
+            intent.putExtra("putChildrenNo",data[postion].childrenNo)
+            activity.startActivity(intent)
+        }
+        return root
+    }
+
+    override fun getItem(postion: Int): Any {
+        return data[postion]
+    }
+
+    override fun getItemId(postion: Int): Long {
+        return postion.toLong()
+    }
+
+    override fun getCount(): Int {
+        return data.size
+    }
+
+
+}
+//get data from intent**************************************************************************************************************************
+textViewShowName.setText(intent.getStringExtra("putName"))
+
+//دالة فحص العنصر فارغ ام لا
+fun check(editText: EditText):Boolean
+    {
+        var result=true
+        if(editText.text.isEmpty())
+        {
+            result=false
+            editText.setError("مطلوب")
+        }
+        return result
+    }
+//add in database**********************************************************************************************************************************
+buttonAdd.setOnClickListener {
+            if(check(editTextName)&&check(editTextAddress)&&check(editTextJob)&&
+                check(editTextChildrenNo))
+            {
+                val database=DatabaseHelper(this)
+                if(database.insert(editTextName.text.toString(),editTextAddress.text.toString(),editTextJob.text.toString(),editTextChildrenNo.text.toString().toInt()))
+                {
+                    Toast.makeText(this, "Data inserted", Toast.LENGTH_LONG).show()
+                    editTextName.setText("")
+                    editTextAddress.setText("")
+                    editTextJob.setText("")
+                    editTextChildrenNo.setText("")
+
+                    
+                }
+            }
+        }
+
+//set data from database to listView***********************************************************************************************************************
+
+      val database=DatabaseHelper(this)
+        var data=database.getAllData()
+        listView.adapter=EmployeeAdapter(this,data)
+
+
+
+Button_Search **********************************************************************************************************************
+
+   button10.setOnClickListener {
+
+            var name_search = editText5.text.toString()
+           val after_search =  database.searchForData(name_search)
+            lista.adapter=EmployeeAdapter(this,after_search)
+        }
+
+ &
+
+ var Db = DatabaseHelper(this)
+            val myadapter = EmployeeAdapter(this, Db.getAllData())
+              My2_List.adapter = myadapter
+        button3_search.setOnClickListener {
+                val name =AddKeword.text.toString()
+                val adapter = EmployeeAdapter(this, Db.searchForData(name))
+                My2_List.adapter = adapter
+            }
+
+
+ScrollViewText ==========================================================================================
+
+<b> Main Titile : </b>
+\n\n
+
+  All text here 
+
+<b><i> titile1 </i></b>
+All text
+\n\n
+
+<b><i> titile2 </i></b>
+All text
+\n\n
+
+
+Macke in All item Photo Defernt ================================================================================
+
+This Code in CustoAdapter ===> 
+
+if (item!! . job title .  equals("Mohaseeb" , true)){
+ customview.imageView.setImageResource(R.drawable.photo)
+
+}else if (item!! . job title .  equals("Teasher" , true)){
+ customview.imageView.setImageResource(R.drawable.photo)
+} ...
+
+Gred View=====================================================================================================
+
+numCulomn >> auto_fit
+
+
+get String in Code=====================================================================================================
+
+textView.text = getText(R.string.app_name)
+
+=====================================================================================================
+############################################# Play_Music########################################################################
+class CustomAdapter(
+   val Acticity: MainActivity,
+   val nameMusic: Array<String>,
+  val  allAlbom: Array<String>,
+  val   music: Array<Int> ,
+   val photo: Array<Int>
+) : BaseAdapter() {
+
+
+
+    @SuppressLint("ViewHolder")
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+
+        var infalter = LayoutInflater.from(Acticity).inflate(R.layout.item, parent , false)
+        infalter.namr_mu.text = nameMusic[position]
+        infalter.Albom.text = allAlbom[position]
+        infalter.textView6.text = nameMusic[position]
+        infalter.Imag.setImageResource(photo[position])
+
+        var mediaPlayer=MediaPlayer()
+
+
+
+        infalter.Star.setOnClickListener {
+            mediaPlayer.reset()
+            mediaPlayer=MediaPlayer.create(Acticity,music[position])
+            mediaPlayer.start()
+        }
+
+        infalter.Stop.setOnClickListener {
+            mediaPlayer.stop()
+        }
+
+        infalter.stoptemprary.setOnClickListener {
+
+            if (mediaPlayer.isPlaying()){
+                mediaPlayer.pause()
+                infalter.stoptemprary.text = "استئناف"
+            }else if (infalter.stoptemprary.text == "استئناف"){
+                mediaPlayer.start()
+                infalter.stoptemprary.text = "ايقاف التشغيل"
+            }
+
+        }
+
+        return  infalter
+    }
+
+    override fun getItem(position: Int): Any {
+        return nameMusic[position]
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getCount(): Int {
+        return music.size
+    }
+
+
+
+&&&&&&&&&&&&&&&&&&& Main Ac &&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+        var name_Music = arrayOf(getText(R.string.sayed_alakwan).toString(),getText(R.string.wasba7talayfan).toString(),getText(R.string.tabat_yadaka).toString(),getText(R.string.noor).toString       (),getText(R.string.insha_allah).toString())
+
+        var AllAlbom = arrayOf(getText(R.string.sayed_alakwan_Albom).toString(),getText(R.string.wasba7talayfan_Albom).toString(),getText(R.string.tabat_yadaka_Albom).toString(),getText        (R.string.noor_Albom).toString(),getText(R.string.insha_allah_Albom).toString())
+
+        var name_Musican = arrayOf(getText(R.string.sayed_alakwan_name_musican).toString(),getText(R.string.wasba7talayfan_name_musican).toString(),getText       (R.string.tabat_yadaka_musican).toString(),getText(R.string.noor_musican).toString(),getText(R.string.insha_allah_musican).toString())
+
+
+
+
+        var music = arrayOf(R.raw.insha_allah,R.raw.noor,R.raw.sayed_alakwan,R.raw.wasba7talayfan,R.raw.tabat_yadaka)
+
+        var photo  = arrayOf(R.drawable.abd,R.drawable.adel,R.drawable.arada,R.drawable.maher,R.drawable.bakgroung)
+
+        var adapter = CustomAdapter(this,name_Music,AllAlbom,music,photo,name_Musican)
+
+        myList2.adapter = adapter
+
+&&&&&&&&&&&&&&&&&&& String file &&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+ <string name="app_name">الموظف</string>
+
+    <string name="name_music">اسم الانشودة :</string>
+    <string name="Alelboom"> الألبوم :</string>
+    <string name="Musican" >المنشد :</string>
+    <string name="start" >تشغيل</string>
+    <string name="stop" >ايقاف</string>
+    <string name="pouse" >ايقاف مؤقت</string>
+    <string name="re_start" >استئناف</string>
+
+    <string name="sayed_alakwan" >سيد الأكوان</string>
+    <string name="sayed_alakwan_Albom" >لا بأس</string>
+    <string name="sayed_alakwan_name_musican" >عبدالقادر قوزع</string>
+
+    <string name="wasba7talayfan" >أصبحت طيفا</string>
+    <string name="wasba7talayfan_Albom" >أصبحت طيفا</string>
+    <string name="wasba7talayfan_name_musican" >عبدالقادر قوزع</string>
+
+    <string name="tabat_yadaka" > طابت يداك</string>
+    <string name="tabat_yadaka_Albom" >يا مالك الملك</string>
+    <string name="tabat_yadaka_musican" >مشاري العرادة</string>
+
+    <string name="noor" >ثلاثين نور</string>
+    <string name="noor_Albom" >مشتاق</string>
+    <string name="noor_musican" >عادل عبدالله</string>
+
+    <string name="insha_allah" >ان شاء الله</string>
+    <string name="insha_allah_Albom" >العيش والصوت</string>
+    <string name="insha_allah_musican" >ماهر زين</string>
+
+
+
+############################################# Play_Music########################################################################
